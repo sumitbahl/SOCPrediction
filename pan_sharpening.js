@@ -15,7 +15,7 @@ var pan = img.select(["B8"]);
 
 // Pan-sharpen
 var sharpened = geeSharp.sharpen(ms, pan)
-Map.setCenter(-122.44829, 37.76664, 13);;
+Map.setCenter(-122.44829, 37.76664, 13);
 Map.addLayer(sharpened,
              {min: 0, max: 0.25, gamma: [1.3]},
              'pan-sharpened');

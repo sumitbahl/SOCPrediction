@@ -8,7 +8,7 @@ function illumination (img) {
 		φa = solar azimuth angle
 		φo = aspect angle
 	*/
-	const DEG_TO_RAD = 3.14159265359 / 180;
+	var DEG_TO_RAD = 3.14159265359 / 180;
 	
 	// metadata about solar position
 	var solar_zenith_angle = ee.Image.constant(ee.Number(img.get('SOLAR_ZENITH_ANGLE'))).multiply(DEG_TO_RAD).clip(img.geometry().buffer(10000));
@@ -24,7 +24,7 @@ function illumination (img) {
 	// slope part of the illumination condition
 	var cosZ = solar_zenith_angle.cos();
 	var cosS = solar_azimuth_angle.cos();
-	var slope_illumination = cosS.expression("cosZ * cosS", {'cosZ': cosZ, 'cosS': cosS.select('slope')});
+	var slope_illumination = cosS.expression("cosZ * cosS", {'cosZ': cosZ, 'cosS': slope_rad.select('slope')});
 
 	// aspect part of the illumination condition
 	var sinZ = solar_zenith_angle.sin();
@@ -43,3 +43,22 @@ function illumination (img) {
 	var img_plus_ic = ee.Image(img.addBands(ic.rename('IC')).addBands(cosZ.rename('cosZ')).addBands(cosS.rename('cosS')).addBands(slope.rename('slope')));
 	return img_plus_ic;
 }
+
+var dem = ee.Image("USGS/SRTMGL1_003");
+
+var l8 = ee.ImageCollection("LANDSAT/LC08/C01/T1_SR");
+ 
+var inBands = ee.List(['B2','B3','B4','B5','B6','B7'])
+var outBands = ee.List(['blue','green','red','nir','swir1','swir2']);
+var collection = l8.filterBounds(geometry)
+                   .filterDate("2017-01-01","2017-12-31")
+                   .sort("CLOUD_COVER")
+                   .select(inBands,outBands);
+ 
+var img = ee.Image(collection.first());
+print(img)
+
+Map.addLayer(img,{},
+	'original');
+
+Map.addLayer(illumination(img), {}, 'illumination');
