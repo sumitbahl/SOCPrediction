@@ -1,3 +1,5 @@
+var dem = ee.Image("USGS/SRTMGL1_003");
+
 function illumination (img) {
 	/* This function calculates the luminous intensity using Lambert's Cosine Law 
 	- returns a value between -1 and 1 
@@ -43,8 +45,6 @@ function illumination (img) {
 	var img_plus_ic = ee.Image(img.addBands(ic.rename('IC')).addBands(cosZ.rename('cosZ')).addBands(cosS.rename('cosS')).addBands(slope.rename('slope')));
 	return img_plus_ic;
 }
-
-var dem = ee.Image("USGS/SRTMGL1_003");
 
 var l8 = ee.ImageCollection("LANDSAT/LC08/C01/T1_SR");
  
