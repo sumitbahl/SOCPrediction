@@ -13,7 +13,8 @@ function apply_SCS_C_correction(band) {
 	*/
 	var out = img_plus_ic_mask2.select('IC', band).reduceRegion({
 		reducer: ee.Reducer.linearFit(), // Compute coefficients: a(slope), b(intercept), and c(b/a) between 𝐿𝑇 and 𝐼𝐿
-		geometry: ee.Geometry(img.geometry().buffer(-100)), // trim off the outer edges of the image for linear relationship
+		geometry: ee.Geometry(img.geometry().buffer(-500)), // trim off the outer edges of the image for linear relationship
+		scale: 300,
 		maxPixels: 1000000000
 	});
 
