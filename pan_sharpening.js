@@ -1,21 +1,28 @@
 var geeSharp = require("users/aazuspan/geeSharp:geeSharp");
 
+function pan_sharpen (img, bands) {
+	var ms = img.select(bands);
+	// Select the 15 m panchromatic band
+	var pan = img.select(["B8"]);
+
+	// Pan-sharpen
+	return geeSharp.sharpen(ms, pan);
+}
+
+
+// Testing
+
 // Load a Landsat 8 top-of-atmosphere reflectance image.
 var img = ee.Image('LANDSAT/LC08/C02/T1_TOA/LC08_044034_20140318');
 
 Map.addLayer(
-    img,
-    {bands: ['B5'], min: 0, max: 0.25, gamma: [1.1]},
-    'NIR');
+    img.select(["B2", "B3", "B4"]),
+    {},
+    'Orig');
     
-// Sharpen B5 (NIR)
-var ms = img.select(["B5"]);
-// Select the 15 m panchromatic band
-var pan = img.select(["B8"]);
+var sharpened = pan_sharpen(img, ["B2", "B3", "B4"]);
 
-// Pan-sharpen
-var sharpened = geeSharp.sharpen(ms, pan)
 Map.setCenter(-122.44829, 37.76664, 13);
 Map.addLayer(sharpened,
-             {min: 0, max: 0.25, gamma: [1.3]},
+             {},
              'pan-sharpened');
