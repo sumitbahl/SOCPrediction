@@ -1,0 +1,1 @@
+/* Combine selecting area, pan-sharpening, illumination, topographic correction, and spectral indices */

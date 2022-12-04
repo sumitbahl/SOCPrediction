@@ -14,9 +14,8 @@ var img = ee.Image(
 	.sort('CLOUD_COVER').first()
 );
 
-var img = spectral.scale(img,
-dataset)
-var img = spectral.offset(img,dataset)
+var img = spectral.scale(img, dataset)
+var img = spectral.offset(img, dataset)
 
 var parameters = {
 	"A": img.select("B1"),
