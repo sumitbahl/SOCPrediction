@@ -17,4 +17,5 @@ function select(long1, lat1, long2, lat2) {
 // var img = select(-63.937781455384815, -2.8582106566354333, -63.319800498353565, -2.575630995105349);
 // Map.addLayer(img, {}, "sample selection" )
 
+// allow function select to be used in other files
 exports.select = select;
