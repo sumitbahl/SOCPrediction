@@ -15,10 +15,22 @@ bad_vars = [
 	"k",
 	"lambdaN",
 	"lambdaR",
-	"lambdaG"
+	"lambdaG",
+	"RE1",
+	"RE2",
+	"RE3",
+	"N2",
+	"HV",
+	"VH",
+	"HH",
+	"VV",
+	"kAB",
+	"p",
+	"c",
+	"fdelta"
 ]
 
-formulas = list(df['formula'])
+formulas = list(df['bands'])
 
 good_indices = []
 
