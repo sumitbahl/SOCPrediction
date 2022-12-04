@@ -1,4 +1,6 @@
-function apply_SCS_C_correction(band) {
+var illumination = require("users/bahlreyansh/SOC:illumination");
+
+function apply_SCS_C_correction(band, img_plus_ic_mask2) {
 	/* Sun-Canopy-Sensor and
 		C-correction (SCS+C)
 		
@@ -44,44 +46,49 @@ function apply_SCS_C_correction(band) {
 	return SCS_C_output;
 }
 
+exports.apply_SCS_C_correction = apply_SCS_C_correction;
+
+function correct(img) {
+
+	var img_plus_ic = illumination.illumination(img);
+
+	var mask1 = img_plus_ic.select('B5').gt(-0.1);
+	var mask2 = img_plus_ic.select('slope').gte(5)
+						.and(img_plus_ic.select('IC').gte(0))
+						.and(img_plus_ic.select('B5').gt(-0.1));
+
+	var img_plus_ic_mask2 = ee.Image(img_plus_ic.updateMask(mask2));
+
+	// Specify Bands to topographically correct
+	var bandList = ['B2','B3','B4','B5','B6','B7'];
+	var compositeBands = img.bandNames();
+	var nonCorrectBands = img.select(compositeBands.removeAll(bandList));
+
+	var img_SCS_C_corr = ee.Image(bandList.map(function(x) {
+												return apply_SCS_C_correction(x, img_plus_ic_mask2);
+											})
+											).addBands(img_plus_ic.select('IC'));
+
+	var bandList_IC = ee.List([bandList, 'IC']).flatten();
+	img_SCS_C_corr = img_SCS_C_corr.unmask(img_plus_ic.select(bandList_IC)).select(bandList);
+
+	var corrected = img_SCS_C_corr.addBands(nonCorrectBands);
+
+	return corrected;
+}
+
+exports.correct = correct;
+
+// testing
 
 var l8 = ee.ImageCollection("LANDSAT/LC08/C01/T1_SR");
- 
-var inBands = ee.List(['B2','B3','B4','B5','B6','B7'])
-var outBands = ee.List(['blue','green','red','nir','swir1','swir2']);
+
 var collection = l8.filterBounds(geometry)
                    .filterDate("2017-01-01","2017-12-31")
                    .sort("CLOUD_COVER")
-                   .select(inBands,outBands);
- 
+
 var img = ee.Image(collection.first());
 
-var props = img.toDictionary();
-var time_start = img.get('system:time_start');
+Map.addLayer(img, {bands: 'B4,B3,B2',min: 0, max: 3000}, 'original');
 
-var img_plus_ic = illumination(img);
-
-var mask1 = img_plus_ic.select('nir').gt(-0.1);
-var mask2 = img_plus_ic.select('slope').gte(5)
-						.and(img_plus_ic.select('IC').gte(0))
-						.and(img_plus_ic.select('nir').gt(-0.1));
-
-var img_plus_ic_mask2 = ee.Image(img_plus_ic.updateMask(mask2));
-
-// Specify Bands to topographically correct
-var bandList = ['blue','green','red','nir','swir1','swir2'];
-var compositeBands = img.bandNames();
-print(compositeBands);
-
-var nonCorrectBands = img.select(compositeBands.removeAll(bandList));
-
-var img_SCS_C_corr = ee.Image(bandList.map(apply_SCS_C_correction)).addBands(img_plus_ic.select('IC'));
-
-var bandList_IC = ee.List([bandList, 'IC']).flatten();
-img_SCS_C_corr = img_SCS_C_corr.unmask(img_plus_ic.select(bandList_IC)).select(bandList);
-print(img_SCS_C_corr);
-var corrected = img_SCS_C_corr.addBands(nonCorrectBands);
-
-Map.addLayer(img, {bands: 'red,green,blue',min: 0, max: 3000}, 'original');
-
-Map.addLayer(corrected, {bands: 'red,green,blue',min: 0, max: 3000}, 'corrected');
+Map.addLayer(correct(img), {bands: 'B4,B3,B2',min: 0, max: 3000}, 'corrected');

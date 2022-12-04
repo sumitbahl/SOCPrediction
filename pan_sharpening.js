@@ -6,8 +6,10 @@ function pan_sharpen (img, bands) {
 	var pan = img.select(["B8"]);
 
 	// Pan-sharpen
-	return geeSharp.sharpen(to_sharpen, pan);
+	return geeSharp.sharpen(to_sharpen, pan).addBands(pan);
 }
+
+exports.pan_sharpen = pan_sharpen;
 
 // Testing
 

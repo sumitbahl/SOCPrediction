@@ -46,19 +46,23 @@ function illumination (img) {
 	return img_plus_ic;
 }
 
-var l8 = ee.ImageCollection("LANDSAT/LC08/C01/T1_SR");
- 
-var inBands = ee.List(['B2','B3','B4','B5','B6','B7'])
-var outBands = ee.List(['blue','green','red','nir','swir1','swir2']);
-var collection = l8.filterBounds(geometry)
-                   .filterDate("2017-01-01","2017-12-31")
-                   .sort("CLOUD_COVER")
-                   .select(inBands,outBands);
- 
-var img = ee.Image(collection.first());
-print(img)
+exports.illumination = illumination;
 
-Map.addLayer(img,{},
-	'original');
+// Testing
 
-Map.addLayer(illumination(img), {}, 'illumination');
+// var l8 = ee.ImageCollection("LANDSAT/LC08/C01/T1_SR");
+ 
+// var inBands = ee.List(['B2','B3','B4','B5','B6','B7'])
+// var outBands = ee.List(['blue','green','red','nir','swir1','swir2']);
+// var collection = l8.filterBounds(geometry)
+//                    .filterDate("2017-01-01","2017-12-31")
+//                    .sort("CLOUD_COVER")
+//                    .select(inBands,outBands);
+ 
+// var img = ee.Image(collection.first());
+// print(img)
+
+// Map.addLayer(img,{},
+// 	'original');
+
+// Map.addLayer(illumination(img), {}, 'illumination');
