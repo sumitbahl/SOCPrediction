@@ -1,1 +1,3 @@
-Status: Experimenting with different steps
+Status:
+* TOA : Done with pan-sharpening, selecting a region, calculating features, combining everything. TO DO: Export the features, use the dataset mapping lat/long to MU_GLOBAL.
+* SR : Done with topographic correction, selecting a region, and calculating features. TO DO: combine everything, use HWSD
