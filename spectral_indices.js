@@ -1,9 +1,6 @@
 var spectral = require("users/dmlmont/spectral:spectral");
 
-var rectangle = ee.Geometry.Rectangle([-63,
--3.46,
--62,
--2.46]);
+var rectangle = ee.Geometry.Rectangle([-63, -3.46, -62, -2.46]);
 
 var dataset = 'LANDSAT/LC08/C01/T1_TOA';
 
@@ -13,9 +10,8 @@ var l8 = ee.ImageCollection(dataset);
 var img = ee.Image(
 	l8.filterBounds(rectangle)
 	.filterDate('2015-01-01',
-'2015-12-31')
-	.sort('CLOUD_COVER')
-	.first()
+				'2015-12-31')
+	.sort('CLOUD_COVER').first()
 );
 
 var img = spectral.scale(img,
@@ -27,12 +23,12 @@ var parameters = {
 	"B": img.select("B2"),
 	"G": img.select("B3"),
 	"R": img.select("B4"),
-    "N": img.select("B5"),
-    "S1": img.select("B6"),
-    "S2": img.select("B7"),
+	"N": img.select("B5"),
+	"S1": img.select("B6"),
+	"S2": img.select("B7"),
 	"T1": img.select("B10"),
 	"T2": img.select("B11"),
-    "L": 1,
+	"L": 1,
 	"g": 2.5,
 	"C1": 6,
 	"C2": 7.5
@@ -197,10 +193,7 @@ var indices = [
 
 for (var x in indices) {
 	try {
-		img = spectral.computeIndex(img,
-									[indices[x]],
-									parameters
-									);
+		img = spectral.computeIndex(img, [indices[x]], parameters);
 	}
 	catch(err) {
 		;
