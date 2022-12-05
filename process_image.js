@@ -30,6 +30,6 @@ for (var i = 0; i < 50; i++) {
 Export.table.toDrive(
 	ee.FeatureCollection(features),
 	"Task" + task,
-	"/SOC/Data",
+	"SOCData",
 	"" + task
 );
