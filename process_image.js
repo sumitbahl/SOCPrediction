@@ -20,16 +20,21 @@ function process_image(long1, lat1, long2, lat2, MU_GLOBAL) {
 
 var features = [];
 
-var task = 2;
+var last_task = 1;
 
-for (var i = 0; i < 50; i++) {
-	var processed = process_image(data[i][1], data[i][3], data[i][2], data[i][4], data[i][0]);
-	features.push(ee.Feature(null,processed));
+for (var task = 0; task < 26; task++) {
+
+	for (var i = task * 50; i < Math.min(data.length, task * 50 + 50); i++) {
+		var processed = process_image(data[i][1], data[i][3], data[i][2], data[i][4], data[i][0]);
+		features.push(ee.Feature(null,processed));
+	}
+
+	features = [];
+
+	Export.table.toDrive(
+		ee.FeatureCollection(features),
+		"Task" + (task + last_task + 1),
+		"SOCData",
+		"" + (task + last_task + 1)
+	);
 }
-
-Export.table.toDrive(
-	ee.FeatureCollection(features),
-	"Task" + task,
-	"SOCData",
-	"" + task
-);
