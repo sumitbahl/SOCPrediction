@@ -29,12 +29,12 @@ for (var task = 0; task < 26; task++) {
 		features.push(ee.Feature(null,processed));
 	}
 
-	features = [];
-
 	Export.table.toDrive(
 		ee.FeatureCollection(features),
 		"Task" + (task + last_task + 1),
 		"SOCData",
 		"" + (task + last_task + 1)
 	);
+
+	features = [];
 }
