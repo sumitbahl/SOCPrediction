@@ -5,13 +5,18 @@ library(dplyr)
 path <- "/mnt/chromeos/MyFiles/Coding/SOCPrediction/data/hwsd.bil"
 
 hwsd <- raster(path)
-
+print(hwsd)
 proj4string(hwsd) <-  "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"
 
-START_LONG = -81
-END_LONG = -79
-START_LAT = 37
-END_LAT = -35
+args <- commandArgs(trailingOnly = TRUE)
+
+START_LONG = as.numeric(args[1])
+END_LONG = as.numeric(args[2])
+START_LAT = as.numeric(args[3])
+END_LAT = as.numeric(args[4])
+
+cat(START_LAT)
+cat(END_LAT)
 
 hwsd.sample <- crop(hwsd, extent(c(START_LONG, END_LONG, END_LAT, START_LAT)))
 
@@ -53,7 +58,7 @@ df <- data.frame(
 	I(lat1)
 )
 
-df <- sample_n(df, size = 200, replace = FALSE)
+# df <- sample_n(df, size = 200, replace = FALSE)
 
 names(df) <- c('MU_GLOBAL', 'LONG1', 'LONG2', 'LAT1', 'LAT2')
 write.table(df, "/mnt/chromeos/MyFiles/Coding/SOCPrediction/latdata.csv", sep=",", row.names = FALSE, col.names = FALSE, append=TRUE)
