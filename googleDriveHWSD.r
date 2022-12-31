@@ -29,36 +29,22 @@ long2 <- list()
 lat1 <- list()
 lat2 <- list()
 
-xFromColLists <- list()
-yFromRowLists <- list()
-
-for (i in 1:240) {
-	xFromColLists[[i]] <- xFromCol(hwsd.sample, i)
-	yFromRowLists[[i]] <- yFromRow(hwsd.sample, i)
-}
-
-# print(xFromColLists)
-
-numRows <- 0
-
 for (i in 1:20) {
 	for (j in 1:20) {
-		block <- getValuesBlock(hwsd.sample, row = i, nrows=1, col = j, ncols = 1)
-		if (block != 0) {
-			numRows <- numRows + 1
-			MU.GLOBAL.IDS[[numRows]] <- block
+		if (getValuesBlock(hwsd.sample, row = i, nrows=1, col = j, ncols = 1) != 0) {
+			MU.GLOBAL.IDS <- append(MU.GLOBAL.IDS, getValuesBlock(hwsd.sample, row = i, nrows=1, col = j, ncols = 1))
 			if (j > 1) {
-				long1[[numRows]] <- (xFromColLists[[j - 1]] + xFromColLists[[j]]) / 2
+				long1 <- append(long1, (xFromCol(hwsd.sample, j - 1) + xFromCol(hwsd.sample, j)) / 2)
 			} else {
-				long1[[numRows]] <- START_LONG
+				long1 <- append(long1, START_LONG)
 			}
-			long2[[numRows]] <- (xFromColLists[[j]] + xFromColLists[[j + 1]]) / 2
+			long2 <- append(long2, (xFromCol(hwsd.sample, j) + xFromCol(hwsd.sample, j + 1)) / 2)
 			if (i > 1) {
-				lat1[[numRows]] <- (yFromRowLists[[i - 1]] + yFromRowLists[[i]]) / 2
+				lat1 <- append(lat1, (yFromRow(hwsd.sample, i - 1) + yFromRow(hwsd.sample, i)) / 2)
 			} else {
-				lat1[[numRows]] <- START_LAT
+				lat1 <- append(lat1, START_LAT)
 			}
-			lat2[[numRows]] <- (yFromRowLists[[i]] + yFromRowLists[[i + 1]]) / 2
+			lat2 <- append(lat2, (yFromRow(hwsd.sample, i) + yFromRow(hwsd.sample, i + 1)) / 2)
 		}
 	}
 	print(i)
@@ -75,4 +61,4 @@ df <- data.frame(
 # df <- sample_n(df, size = 200, replace = FALSE)
 
 names(df) <- c('MU_GLOBAL', 'LONG1', 'LONG2', 'LAT1', 'LAT2')
-write.table(df, "/mnt/chromeos/MyFiles/Coding/SOCPrediction/latdata.csv", sep=",", row.names = FALSE, col.names = FALSE, append=TRUE)
+write.table(df, "/mnt/chromeos/MyFiles/Coding/SOCPrediction/latdata1.csv", sep=",", row.names = FALSE, col.names = FALSE, append=TRUE)
