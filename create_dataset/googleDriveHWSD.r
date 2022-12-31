@@ -2,7 +2,7 @@ library(raster)
 library(sp)
 library(dplyr)
 
-path <- "/mnt/chromeos/MyFiles/Coding/SOCPrediction/data/hwsd.bil"
+path <- "/content/drive/MyDrive/SOCData/hwsd.bil"
 
 hwsd <- raster(path)
 print(hwsd)
@@ -75,4 +75,4 @@ df <- data.frame(
 # df <- sample_n(df, size = 200, replace = FALSE)
 
 names(df) <- c('MU_GLOBAL', 'LONG1', 'LONG2', 'LAT1', 'LAT2')
-write.table(df, "/mnt/chromeos/MyFiles/Coding/SOCPrediction/latdata.csv", sep=",", row.names = FALSE, col.names = FALSE, append=TRUE)
+write.table(df, "/content/drive/MyDrive/SOCData/latdata.csv", sep=",", row.names = FALSE, col.names = FALSE, append=TRUE)
