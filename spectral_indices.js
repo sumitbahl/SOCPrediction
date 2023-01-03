@@ -1,6 +1,6 @@
 var spectral = require("users/dmlmont/spectral:spectral");
 
-function compute_indices (img) {
+function compute_indices(img) {
 	var dataset = 'LANDSAT/LC08/C01/T1_TOA';
 
 	var img = spectral.scale(img, dataset)
@@ -183,7 +183,7 @@ function compute_indices (img) {
 		try {
 			img = spectral.computeIndex(img, [indices[x]], parameters);
 		}
-		catch(err) {
+		catch (err) {
 			;
 		}
 	}
