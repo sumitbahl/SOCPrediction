@@ -9,15 +9,18 @@ import matplotlib
 import time
 
 
-class SOCPredictor:
+class SOCTOCPredictor:
 
     def __init__(self):
         ee.Initialize()
         matplotlib.use('TkAgg')
         self.dataset = 'LANDSAT/LC08/C01/T1_TOA'
         self.l8 = ee.ImageCollection(self.dataset)
-        self.scaler = pickle.load(open("TOA_scaler.pickle", "rb"))
-        self.lgbm = lightgbm.Booster(model_file='TOA_LGBM.txt')
+        self.SOCscaler = pickle.load(open("TOA_scaler.pickle", "rb"))
+        self.SOClgbm = lightgbm.Booster(model_file='TOA_LGBM.txt')
+
+        self.TOCscaler = pickle.load(open("TOC_TOA_scaler.pickle", "rb"))
+        self.TOClgbm = lightgbm.Booster(model_file='TOC_TOA_LGBM.txt')
 
     def select(self, coords, year):
         geometry = ee.Geometry.Polygon(coords)
@@ -93,14 +96,14 @@ class SOCPredictor:
         # Combine selecting area, pan-sharpening, illumination, topographic correction, and spectral indices
         # returns dictionary of features
 
-        predictions = {}
+        predictions_SOC = {}
+        predictions_TOC = {}
 
         for year in range(min_year, 2022):
             img = self.select(coords, year)
             img = img.scaleAndOffset()
 
-            img = self.pan_sharpen(
-                img, ["B1", "B2", "B3", "B4", "B5", "B6", "B7", "B9", "B10", "B11"])
+            img = self.pan_sharpen(img, ["B1", "B2", "B3", "B4", "B5", "B6", "B7", "B9", "B10", "B11"])
             indices = self.compute_indices(img)
 
             indices_dict = indices.getInfo()
@@ -108,25 +111,29 @@ class SOCPredictor:
             df = pd.DataFrame([indices_dict])
 
             df = df.fillna(0)
-            df_scaled = self.scaler.transform(df)
+            df_SOC_scaled = self.SOCscaler.transform(df)
+            df_TOC_scaled = self.TOCscaler.transform(df)
+            predictions_SOC[year] = self.SOClgbm.predict(df_SOC_scaled)[0]
+            predictions_TOC[year] = self.TOClgbm.predict(df_TOC_scaled)[0]
 
-            predictions[year] = self.lgbm.predict(df_scaled)[0]
+        return {
+            'SOC' : predictions_SOC,
+            'TOC' : predictions_TOC
+        }
 
-        print(predictions)
-        return predictions
-
-    def plot(self, predictions_dict, filename):
+    def plot(self, predictions_dict, filename, label):
         predictions_dict_list = predictions_dict.items()
         x, y = zip(*predictions_dict_list)
-        plt.plot(x, y)
-        plt.title('SOC Sequestration Progress')
+        plt.plot(x, y, label = label)
+        plt.title('Subsoil and Topsoil Organic Carbon Sequestration Progress')
         plt.xlabel('Year')
-        plt.ylabel('% SOC')
+        plt.ylabel('% Organic Carbon')
+        plt.legend(loc='best')
         # plt.show() # opens Tkinter GUI
         plt.savefig(filename)
 
 
-SOC_predictor = SOCPredictor()
+SOC_predictor = SOCTOCPredictor()
 
 if __name__ == '__main__':
     coords = [
@@ -137,4 +144,4 @@ if __name__ == '__main__':
         [-73.1333333333761, -54.0]
     ]
 
-    SOC_predictor.plot(SOC_predictor.predict([coords], 2014))
+    SOC_predictor.plot(SOC_predictor.predict([coords], 2014)['SOC'])
