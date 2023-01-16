@@ -4,7 +4,11 @@ import spyndex
 import pandas as pd
 import sklearn
 import lightgbm
+import matplotlib.pyplot as plt
+import matplotlib
+import time
 
+matplotlib.use('TkAgg')
 
 # already authenticated
 # ee.Authenticate
@@ -95,7 +99,7 @@ def predict(long1, lat1, long2, lat2):
 	scaler = pickle.load(open("api/TOA_scaler.pickle", "rb"))
 	lgbm = lightgbm.Booster(model_file = 'api/TOA_LGBM.txt')
 
-	predictions = []
+	predictions = {}
 
 	for year in range(2014, 2022): 
 		img = select(long1, lat1, long2, lat2, year)
@@ -111,11 +115,16 @@ def predict(long1, lat1, long2, lat2):
 		df = df.fillna(0)
 		df_scaled = scaler.transform(df)
 
-		predictions.append({year : lgbm.predict(df_scaled)[0]})
-		print(predictions[-1])
-
-
-	return predictions
+		predictions[year] = lgbm.predict(df_scaled)[0]
 	
+	print(predictions)
+	return predictions
 
-print(predict(-73.	, -54.0083333333477, -73.1333333333761, -54.0))
+def plot(predictions_dict):
+	predictions_dict_list = predictions_dict.items()
+	x, y = zip(*predictions_dict_list)
+	plt.plot(x, y)
+	# plt.show() # opens Tkinter GUI
+	plt.savefig('plot.png')
+
+plot(predict(-73., -54.0083333333477, -73.1333333333761, -54.0))
