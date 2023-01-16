@@ -1,15 +1,1 @@
-Status:
-* TOA : Done with pan-sharpening, selecting a region, calculating features, combining everything. TO DO: Export the features, use the dataset mapping lat/long to MU_GLOBAL.
-* SR : Done with topographic correction, selecting a region, and calculating features. TO DO: combine everything, use HWSD
-
-
-Current Task:
-2
-
-Next 2x2 grids:
-- [x] lat (36, 38) and long (-122, -120)
-- [x] lat (45, 47) and long (55, 57)
-- [x] lat (28, 30) and long (77, 79)
-- [x] lat (23, 25) and long (25, 27)
-- [x] lat (-16, -14) and long (-51, -53)
-- lat (35, 37) and long (-81, -79) 
+# SOC Prediction
