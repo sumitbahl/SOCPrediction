@@ -3,3 +3,5 @@ latdata.csv
 spectral-indices-table.csv
 latdata copy.csv
 private
+__pycache__
+api/img
