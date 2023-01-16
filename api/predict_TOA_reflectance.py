@@ -129,6 +129,8 @@ class SOCTOCPredictor:
         plt.xlabel('Year')
         plt.ylabel('% Organic Carbon')
         plt.legend(loc='best')
+        ax = plt.gca()
+        ax.set_ylim([max(ax.get_ylim()[0] - 2, 0), min(ax.get_ylim()[1] + 2, 100)]) 
         # plt.show() # opens Tkinter GUI
         plt.savefig(filename)
 
