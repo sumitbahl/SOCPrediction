@@ -19,15 +19,15 @@ class SOCPredictor:
         self.scaler = pickle.load(open("TOA_scaler.pickle", "rb"))
         self.lgbm = lightgbm.Booster(model_file='TOA_LGBM.txt')
 
-    def select(self, long1, lat1, long2, lat2, year):
-        rectangle = ee.Geometry.Rectangle([long1, lat1, long2, lat2])
+    def select(self, coords, year):
+        geometry = ee.Geometry.Polygon(coords)
         img = ee.Image(
-            self.l8.filterBounds(rectangle)
-            .filterDate(f'{year}-01-01',
-                        f'{year}-12-31')
-            .sort('CLOUD_COVER').first()
+            self.l8.filterBounds(geometry)
+                .filterDate(f'{year}-01-01',
+                            f'{year}-12-31')
+                .sort('CLOUD_COVER').first()
         )
-        return img.clip(rectangle).select(list(range(11)))
+        return img.clip(geometry).select(list(range(11)))
 
     def SFIM(self, img, pan):
         imgScale = img.projection().nominalScale()
@@ -89,14 +89,14 @@ class SOCPredictor:
 
         return meanDict
 
-    def predict(self, long1, lat1, long2, lat2, min_year):
+    def predict(self, coords, min_year):
         # Combine selecting area, pan-sharpening, illumination, topographic correction, and spectral indices
         # returns dictionary of features
 
         predictions = {}
 
         for year in range(min_year, 2022):
-            img = self.select(long1, lat1, long2, lat2, year)
+            img = self.select(coords, year)
             img = img.scaleAndOffset()
 
             img = self.pan_sharpen(
@@ -129,5 +129,12 @@ class SOCPredictor:
 SOC_predictor = SOCPredictor()
 
 if __name__ == '__main__':
-    SOC_predictor.plot(SOC_predictor.predict(-73., -
-                       54.0083333333477, -73.1333333333761, -54.0))
+    coords = [
+        [-73.1333333333761, -54.0],
+        [-73.0, -54.0],
+        [-73.0, -54.0083333333477],
+        [-73.1333333333761, -54.0083333333477],
+        [-73.1333333333761, -54.0]
+    ]
+
+    SOC_predictor.plot(SOC_predictor.predict([coords], 2014))
