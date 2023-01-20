@@ -8,11 +8,12 @@ class TillagePredictor:
     def __init__(self):
         self.encoder = pickle.load(open("tillage_encoder.pickle", "rb"))
         self.random_forest = pickle.load(open("tillage_random_forest.pickle", "rb"))
-    def predict(self, current_tillage, selected_tillage, depth, norm):
+
+    def predict(self, current_tillage, selected_tillage, current_soc_or_toc, depth, norm):
         data = {
             "control": current_tillage,
             "rvUnits": "%",
-            "controlValue": -5,  # TODO - use SOC or TOC prediction function
+            "controlValue": current_soc_or_toc,
             "treatment": selected_tillage,
             "sampleDepth": depth,
             "studyLength": 5,
@@ -26,9 +27,11 @@ class TillagePredictor:
 
         return self.random_forest.predict(test_df)[0]
 
+
 if __name__ == "__main__":
     tillage_predictor = TillagePredictor()
-    print(tillage_predictor.predict("Conventional tillage", "No tillage", "0-30 cm", 2))
+    print(tillage_predictor.predict(
+        "Conventional tillage", "No tillage", "0-30 cm", 2))
 
 # example
 data = {
