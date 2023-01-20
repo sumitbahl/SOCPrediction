@@ -1,4 +1,5 @@
 from flask import send_file, request, Flask, jsonify
+from predict_cover_crop_impact import CoverCropPredictor
 from predict_tillage_impact import TillagePredictor
 from predict_TOA_reflectance import SOCTOCPredictor
 import ast
@@ -6,7 +7,7 @@ import ast
 app = Flask(__name__)
 soc_toc_predictor = SOCTOCPredictor()
 tillage_predictor = TillagePredictor()
-
+cover_crop_predictor = CoverCropPredictor()
 
 @app.route('/get_data')
 def get_data():
@@ -56,5 +57,27 @@ def tillage_impact():
 
     return jsonify(data)
 
+@app.route('/cover_crop_impact')
+def cover_crop_impact():
+    coords = ast.literal_eval(request.args.get('coords'))
+    type_of_species = request.args.get('typeOfSpecies')
+    number_of_species = request.args.get('numberOfSpecies')
+
+    year_from = 2021
+    soc_toc_predictions = soc_toc_predictor.predict(coords, year_from)
+
+    current_soc = soc_toc_predictions['SOC'][year_from]
+    current_toc = soc_toc_predictions['TOC'][year_from]
+
+    data = {}
+    data['percent_increase'] = cover_crop_predictor.predict(
+        type_of_species=type_of_species,
+        number_of_species=number_of_species,
+        current_soc_or_toc=current_soc,
+        depth="0-30 cm",
+        norm=2
+    )
+
+    return jsonify(data)
 
 app.run()
