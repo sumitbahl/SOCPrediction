@@ -16,11 +16,11 @@ class SOCTOCPredictor:
         matplotlib.use('TkAgg')
         self.dataset = 'LANDSAT/LC08/C01/T1_TOA'
         self.l8 = ee.ImageCollection(self.dataset)
-        self.SOCscaler = pickle.load(open("TOA_scaler.pickle", "rb"))
-        self.SOClgbm = lightgbm.Booster(model_file='TOA_LGBM.txt')
+        self.SOCscaler = pickle.load(open("saved_objects/soc_toc_mapping/TOA_scaler.pickle", "rb"))
+        self.SOClgbm = lightgbm.Booster(model_file='saved_objects/soc_toc_mapping/TOA_LGBM.txt')
 
-        self.TOCscaler = pickle.load(open("TOC_TOA_scaler.pickle", "rb"))
-        self.TOClgbm = lightgbm.Booster(model_file='TOC_TOA_LGBM.txt')
+        self.TOCscaler = pickle.load(open("saved_objects/soc_toc_mapping/TOC_TOA_scaler.pickle", "rb"))
+        self.TOClgbm = lightgbm.Booster(model_file='saved_objects/soc_toc_mapping/TOC_TOA_LGBM.txt')
 
     def select(self, coords, year):
         geometry = ee.Geometry.Polygon(coords)

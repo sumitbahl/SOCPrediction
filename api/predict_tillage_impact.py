@@ -6,8 +6,8 @@ import pandas as pd
 class TillagePredictor:
 
     def __init__(self):
-        self.encoder = pickle.load(open("tillage_encoder.pickle", "rb"))
-        self.random_forest = pickle.load(open("tillage_random_forest.pickle", "rb"))
+        self.encoder = pickle.load(open("saved_objects/tillage/tillage_encoder.pickle", "rb"))
+        self.random_forest = pickle.load(open("saved_objects/tillage/tillage_random_forest.pickle", "rb"))
 
     def predict(self, current_tillage, selected_tillage, current_soc_or_toc, depth, norm):
         data = {
