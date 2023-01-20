@@ -84,6 +84,6 @@ class NutrientManagementPredictor:
 
 
 if __name__ == "__main__":
-    tillage_predictor = NutrientManagementPredictor()
-    print(tillage_predictor.predict(
+    nutrient_managment_predictor = NutrientManagementPredictor()
+    print(nutrient_managment_predictor.predict(
         "Cereal", "Unamended", "Animal Manure", 1, "0-30 cm", 2))
