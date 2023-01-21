@@ -1,9 +1,11 @@
-from flask import send_file, request, Flask, jsonify
+import ast
+
+from flask import Flask, jsonify, request, send_file
+from predict_continuous_cover_impact import ContinuousCoverPredictor
 from predict_cover_crop_impact import CoverCropPredictor
+from predict_nutrient_management_impact import NutrientManagementPredictor
 from predict_tillage_impact import TillagePredictor
 from predict_TOA_reflectance import SOCTOCPredictor
-from predict_nutrient_management_impact import NutrientManagementPredictor
-import ast
 
 app = Flask(__name__)
 
@@ -11,6 +13,7 @@ soc_toc_predictor = SOCTOCPredictor()
 tillage_predictor = TillagePredictor()
 cover_crop_predictor = CoverCropPredictor()
 nutrient_managment_predictor = NutrientManagementPredictor()
+continuous_cover_predictor = ContinuousCoverPredictor()
 
 @app.route('/get_data')
 def get_data():
@@ -102,6 +105,35 @@ def nutrient_management_impact():
         current_fertilizer=current_fertilizer,
         future_fertilizer=future_fertilizer,
         current_soc_or_toc=current_soc,
+        depth="0-30 cm",
+        norm=2
+    )
+
+    return jsonify(data)
+
+@app.route('/continuous_cover_impact')
+def continuous_cover_impact():
+    coords = ast.literal_eval(request.args.get('coords'))
+    crop_type = request.args.get('croptype')
+    fertilization = request.args.get('fertilization')
+    current_continuous_cover = request.args.get('current')
+    future_continuous_cover = request.args.get('future')
+
+    year_from = 2021
+    soc_toc_predictions = soc_toc_predictor.predict(coords, year_from)
+
+    current_soc = soc_toc_predictions['SOC'][year_from]
+    current_toc = soc_toc_predictions['TOC'][year_from]
+
+    data = {}
+    data['percent_increase'] = continuous_cover_predictor.predict(
+        croptype=crop_type,
+        fertilization=fertilization,
+        current_continuous_cover=current_continuous_cover,
+        future_continuous_cover=future_continuous_cover,
+        current_soc_or_toc=current_soc,
+        speciestype="Legume & Non-Legume",
+        numspecies=2,
         depth="0-30 cm",
         norm=2
     )

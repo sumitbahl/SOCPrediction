@@ -28,7 +28,6 @@ class ContinuousCoverPredictor:
             "numspecies": numspecies
         }
 
-        
         for croptype_option in ["Cereal", "Vegetable", "Bean", "Tree", "Bare Soil"]:
             if croptype == croptype_option:
                 data[croptype_option + "_croptype"] = 1
@@ -79,4 +78,5 @@ class ContinuousCoverPredictor:
 
 if __name__ == "__main__":
     continuous_cover_predictor = ContinuousCoverPredictor()
-    print(continuous_cover_predictor.predict("Cereal", "Uniform", "monocrop", "intercrop", 1, "Legume & Non-Legume", 2, "0-30 cm", 2))
+    print(continuous_cover_predictor.predict("Cereal", "Uniform",
+          "monocrop", "intercrop", 1, "Legume & Non-Legume", 2, "0-30 cm", 2))

@@ -13,3 +13,7 @@ http://127.0.0.1:5000/get_plot?coords=[%20[-73.1333333333761,%20-54.0],%20[-73.0
 http://127.0.0.1:5000/tillage_impact?coords=[%20[-73.1333333333761,%20-54.0],%20[-73.0,%20-54.0],%20[-73.0,%20-54.0083333333477],%20[-73.1333333333761,%20-54.0083333333477],%20[-73.1333333333761,%20-54.0]]&currentTillage=Conventional tillage&futureTillage=No tillage
 
 http://127.0.0.1:5000/cover_crop_impact?coords=[%20[-73.1333333333761,%20-54.0],%20[-73.0,%20-54.0],%20[-73.0,%20-54.0083333333477],%20[-73.1333333333761,%20-54.0083333333477],%20[-73.1333333333761,%20-54.0]]&typeOfSpecies=Non-legume&numberOfSpecies=Single%20species
+
+http://127.0.0.1:5000/nutrient_management_impact?coords=[%20[-73.1333333333761,%20-54.0],%20[-73.0,%20-54.0],%20[-73.0,%20-54.0083333333477],%20[-73.1333333333761,%20-54.0083333333477],%20[-73.1333333333761,%20-54.0]]&croptype=Cereal&currentFertilizer=Unamended&futureFertilizer=Animal%20Manure
+
+http://127.0.0.1:5000/continuous_cover_impact?coords=[%20[-73.1333333333761,%20-54.0],%20[-73.0,%20-54.0],%20[-73.0,%20-54.0083333333477],%20[-73.1333333333761,%20-54.0083333333477],%20[-73.1333333333761,%20-54.0]]&croptype=Cereal&fertilization=Uniform&current=monocrop&future=intercrop
