@@ -12,6 +12,10 @@ class NutrientManagementPredictor:
 
     def predict(self, croptype, current_fertilizer, future_fertilizer, current_soc_or_toc, depth, norm):
         # croptype can be Cereal, Vegetable, Bean, or Tree
+        
+        if current_fertilizer == future_fertilizer:
+            return 0
+
         new_croptype = ""
         if croptype in ["Bean", "Tree"]:
             new_croptype = '["Cereal", "Bean", "Tree"]'

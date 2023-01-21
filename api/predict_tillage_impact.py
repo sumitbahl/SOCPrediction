@@ -11,6 +11,10 @@ class TillagePredictor:
     def predict(self, current_tillage, selected_tillage, current_soc_or_toc, depth, norm):
         # control can be Conventional tillage, Conservation tillage, Zonal tillage
         # treatment can be No tillage, Conservation tillage, Zonal tillage
+        
+        if current_tillage == selected_tillage:
+            return 0
+        
         data = {
             "control": current_tillage,
             "rvUnits": "%",

@@ -15,7 +15,10 @@ class ContinuousCoverPredictor:
         # croptype can be Cereal, Vegetable, Bean, Tree, or Bare Soil
         # current continuous cover can be bare soil or monocrop
         # future continuous cover can be intercrop, monocrop, or alley crop
-
+        
+        if current_continuous_cover == future_continuous_cover:
+            return 0
+        
         data = {
             "rvUnits": "%",
             "controlValue": current_soc_or_toc,
