@@ -9,7 +9,7 @@ It is split into two directories:
 # SOC Mapping
 * To run these models, you will first need the extracted features CSV files.
 
-* Please see `README.md` in the `Feature Extraction` directory for instructions.
+* Please see `README.md` in the `feature_extraction` directory for instructions.
 
 * You will also need the Harmonized World Soil Database (HWSD) attributes database. Go to this link: https://www.fao.org/soils-portal/soil-survey/soil-maps-and-databases/harmonized-world-soil-database-v12/en/ Click "Download database (.mdb)" and export as CSV.
 
