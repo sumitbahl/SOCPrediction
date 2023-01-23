@@ -14,7 +14,7 @@ class SOCTOCPredictor:
     def __init__(self):
         ee.Initialize()
         matplotlib.use('TkAgg')
-        self.dataset = 'LANDSAT/LC08/C01/T1_TOA'
+        self.dataset = 'LANDSAT/LC08/C02/T1_RT_TOA'
         self.l8 = ee.ImageCollection(self.dataset)
         self.SOCscaler = pickle.load(open("saved_objects/soc_toc_mapping/TOA_scaler.pickle", "rb"))
         self.SOClgbm = lightgbm.Booster(model_file='saved_objects/soc_toc_mapping/TOA_LGBM.txt')
@@ -99,7 +99,7 @@ class SOCTOCPredictor:
         predictions_SOC = {}
         predictions_TOC = {}
 
-        for year in range(min_year, 2022):
+        for year in range(min_year, 2023):
             img = self.select(coords, year)
             img = img.scaleAndOffset()
 
